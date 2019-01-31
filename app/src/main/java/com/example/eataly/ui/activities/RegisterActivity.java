@@ -1,4 +1,4 @@
-package com.example.eataly;
+package com.example.eataly.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,10 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.eataly.R;
+import com.example.eataly.Utility;
+
 public class RegisterActivity extends AppCompatActivity {
     Button registerBtn;
     EditText passwordEt,emailEt,numberEt;

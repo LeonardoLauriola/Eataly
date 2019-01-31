@@ -6,4 +6,5 @@
     <string name="register">register</string>
     <string name="login">login</string>
     <string name="welcome">Benvenuto in Eataly</string>
+    <string name="checkout">checkout</string>
 </resources>
