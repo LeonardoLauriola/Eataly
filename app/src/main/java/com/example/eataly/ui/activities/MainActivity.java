@@ -4,17 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.eataly.R;
+import com.example.eataly.datamodels.Restaurant;
+import com.example.eataly.ui.adapters.RestaurantAdapter;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    RecyclerView restaurantRv;
+    RecyclerView.LayoutManager layoutManager;
+    RestaurantAdapter adapter;
+    ArrayList<String> arrayList;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        restaurantRv=findViewById(R.id.places_rv);
+        layoutManager=new LinearLayoutManager(this);
+        adapter=new RestaurantAdapter(this,getData());
+
+        restaurantRv.setLayoutManager(layoutManager);
+        restaurantRv.setAdapter(adapter);
     }
 
     @Override
@@ -36,5 +53,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private ArrayList<Restaurant> getData(){
+        ArrayList<Restaurant>a =new ArrayList<Restaurant>();
+        a.add(new Restaurant("McDonald's","Via Tiburtina",10.0f));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f));
+        a.add(new Restaurant("KFC","Roma est", 12.3f));
+        return a;
     }
 }
