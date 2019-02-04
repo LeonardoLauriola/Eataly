@@ -9,11 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import com.example.eataly.R;
 import com.example.eataly.datamodels.Restaurant;
 import com.example.eataly.ui.adapters.RestaurantAdapter;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     RestaurantAdapter adapter;
     ArrayList<String> arrayList;
+    public static boolean lay=true;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,9 +47,15 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId()==R.id.login_menu) {
             startActivity(new Intent(this, LoginActivity.class));
             return true;
-        }else {
-            if(item.getItemId()==R.id.checkot_menu){
+        }else if(item.getItemId()==R.id.checkot_menu){
                 startActivity(new Intent(this,CheckoutActivity.class));
+        }else if(item.getItemId()==R.id.change_layout){
+            lay=!lay;
+            if(lay) {
+                item.setIcon(R.drawable.ic_grid_view);
+                                
+            }else {
+                item.setIcon(R.drawable.ic_list_view);
             }
         }
         return super.onOptionsItemSelected(item);
@@ -57,9 +63,17 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Restaurant> getData(){
         ArrayList<Restaurant>a =new ArrayList<Restaurant>();
-        a.add(new Restaurant("McDonald's","Via Tiburtina",10.0f));
-        a.add(new Restaurant("Burger King","via nazionale", 12.4f));
-        a.add(new Restaurant("KFC","Roma est", 12.3f));
+        a.add(new Restaurant("McDonald's","Via Tiburtina",10.0f, R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f, R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,R.drawable.immagine1));
+        a.add(new Restaurant("KFC","Roma est", 12.3f, R.drawable.immagine1));
         return a;
     }
 }
