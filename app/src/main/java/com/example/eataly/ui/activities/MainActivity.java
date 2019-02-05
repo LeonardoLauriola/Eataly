@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu_main,menu);
+
+        if(adapter.getIsGridMode()) {
+            (menu.findItem(R.id.change_layout)).setIcon(R.drawable.ic_list_view);
+        }
         return true;
     }
 
@@ -55,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
         }else if(item.getItemId()==R.id.change_layout){
 
             if(!adapter.getIsGridMode()) {
-                item.setIcon(R.drawable.ic_grid_view);
+                item.setIcon(R.drawable.ic_list_view);
                 setLayoutManager();
             }else {
-                item.setIcon(R.drawable.ic_list_view);
+                item.setIcon(R.drawable.ic_grid_view);
                 setLayoutManager();
             }
 
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private RecyclerView.LayoutManager getLayoutManager(boolean isGridLayout){
-        return isGridLayout ? new GridLayoutManager(this,2) : new LinearLayoutManager(this);
+        return isGridLayout ? new GridLayoutManager(this,2):new LinearLayoutManager(this);
     }
 
     private boolean getSavedLayoutManager(){

@@ -36,9 +36,9 @@ public class RestaurantAdapter  extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view;
         if(getIsGridMode()) {
-            view = inflater.inflate(R.layout.item_restaurant, viewGroup, false);
-        }else{
             view = inflater.inflate(R.layout.item_grid_restaurant, viewGroup, false);
+        }else{
+            view = inflater.inflate(R.layout.item_restaurant, viewGroup, false);
         }
         return new RestaurantViewHolder(view);
     }
