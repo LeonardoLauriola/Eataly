@@ -71,16 +71,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private ArrayList<Restaurant> getData(){
-        ArrayList<Restaurant>a =new ArrayList<Restaurant>();
-
-        a.add(new Restaurant("McDonald's","via nazionale", 12.4f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png"));
-        a.add(new Restaurant("Burger King","via nazionale", 12.4f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg"));
-        a.add(new Restaurant("KFC","Roma EST", 12.4f,"http://www.freelogovectors.net/wp-content/uploads/2018/03/kfc-logo03.png"));
-        a.add(new Restaurant("Lo Chalet dei Gourmet","Via Tiburtina",10.0f,"https://gq-images.condecdn.net/image/YokKPaPokWK/crop/1620/f/Romantic-Restaurant-02-GQ-4Apr17_b.jpg"));
-        return a;
-    }
-
     private void saveLayoutPreferences(boolean isGridLayout){
         sharedPreferences=getSharedPreferences(SharedPrefs,MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
@@ -88,13 +78,13 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private RecyclerView.LayoutManager getLayoutManager(boolean isGridLayout){
-        return isGridLayout ? new GridLayoutManager(this,2):new LinearLayoutManager(this);
+    private boolean getSavedLayoutManager(){
+        sharedPreferences= getSharedPreferences(SharedPrefs,MODE_PRIVATE);
+        return sharedPreferences.getBoolean("VIEW_MODE",false);
     }
 
-    private boolean getSavedLayoutManager(){
-       sharedPreferences= getSharedPreferences(SharedPrefs,MODE_PRIVATE);
-        return sharedPreferences.getBoolean("VIEW_MODE",false);
+    private RecyclerView.LayoutManager getLayoutManager(boolean isGridLayout){
+        return isGridLayout ? new GridLayoutManager(this,2):new LinearLayoutManager(this);
     }
 
     private void setLayoutManager(){
@@ -103,5 +93,15 @@ public class MainActivity extends AppCompatActivity {
         restaurantRv.setLayoutManager(layoutManager);
         restaurantRv.setAdapter(adapter);
         saveLayoutPreferences(adapter.getIsGridMode());
+    }
+
+    private ArrayList<Restaurant> getData(){
+        ArrayList<Restaurant>a =new ArrayList<Restaurant>();
+
+        a.add(new Restaurant("McDonald's","via nazionale", 12.4f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png"));
+        a.add(new Restaurant("Burger King","via nazionale", 12.4f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg"));
+        a.add(new Restaurant("KFC","Roma EST", 12.4f,"http://www.freelogovectors.net/wp-content/uploads/2018/03/kfc-logo03.png"));
+        a.add(new Restaurant("Lo Chalet dei Gourmet","Via Tiburtina",10.0f,"https://gq-images.condecdn.net/image/YokKPaPokWK/crop/1620/f/Romantic-Restaurant-02-GQ-4Apr17_b.jpg"));
+        return a;
     }
 }
