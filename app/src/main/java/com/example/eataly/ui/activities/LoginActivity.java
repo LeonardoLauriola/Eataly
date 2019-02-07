@@ -16,9 +16,6 @@ import com.example.eataly.R;
 public class LoginActivity  extends AppCompatActivity implements View.OnClickListener{
     Button loginBtn,registerBtn;
     EditText emailEt,passwordEt;
-    Switch switchBtn;
-    LinearLayout mainL;
-    public static final String EMAIL_KEY= "email";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

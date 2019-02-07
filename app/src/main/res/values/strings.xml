@@ -7,4 +7,6 @@
     <string name="login">login</string>
     <string name="welcome">Benvenuto in Eataly</string>
     <string name="checkout">checkout</string>
+    <string name="total">Total:</string>
+    <string name="min_order">Importo Minimo</string>
 </resources>

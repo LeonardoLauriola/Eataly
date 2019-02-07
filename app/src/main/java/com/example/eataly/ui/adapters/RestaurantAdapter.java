@@ -68,9 +68,8 @@ public class RestaurantAdapter  extends RecyclerView.Adapter {
 
 
     public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
-    {   public TextView restaurantName;
-        public TextView restaurantAddress;
-        public TextView restaurantMinOrder;
+    {
+        public TextView restaurantName,restaurantAddress,restaurantMinOrder;
         public ImageView img;
         public CardView cardBtn;
 
@@ -91,7 +90,6 @@ public class RestaurantAdapter  extends RecyclerView.Adapter {
                 Restaurant item = data.get(getAdapterPosition());
                 intent.putExtra("img", item.getImg());
                 context.startActivity(intent);
-
             }
         }
     }

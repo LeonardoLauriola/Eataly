@@ -1,10 +1,15 @@
 package com.example.eataly.datamodels;
 
+import java.util.ArrayList;
+
 public class Restaurant {
     private String name;
     private String address;
     private float min_order;
     private String img;
+    private ArrayList<String> products;
+    private ArrayList<Product> prodotti; //TO Change name  the change from string to product type
+
 
     public Restaurant(String name, String address, float min_order, String img){
         this.name=name;
@@ -13,7 +18,7 @@ public class Restaurant {
         this.img=img;
     }
 
-    public float getMin_order() {
+    public String getMin_order() {
         return min_order;
     }
 
@@ -43,5 +48,14 @@ public class Restaurant {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+
+    public ArrayList<String> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<String> products) {
+        this.products = products;
     }
 }

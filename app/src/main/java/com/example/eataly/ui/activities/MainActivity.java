@@ -95,13 +95,28 @@ public class MainActivity extends AppCompatActivity {
         saveLayoutPreferences(adapter.getIsGridMode());
     }
 
-    private ArrayList<Restaurant> getData(){
+    public static ArrayList<Restaurant> getData(){
         ArrayList<Restaurant>a =new ArrayList<Restaurant>();
+        Restaurant r;
+        ArrayList<String> prod=new ArrayList<>();
+        prod.add("Pasta");
+        prod.add("Pizza");
+        prod.add("Bruschetta");
+        prod.add("Cipolle fritte");
+        prod.add("Fried chicken");
+        r=new Restaurant("McDonald's","via nazionale", 12.4f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png");
+        r.setProducts(prod);
+        a.add(r);
+        r=new Restaurant("Burger King","via nazionale", 12.4f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg");
+        r.setProducts(prod);
+        a.add(r);
+        r=new Restaurant("KFC","Roma EST", 12.4f,"http://www.freelogovectors.net/wp-content/uploads/2018/03/kfc-logo03.png");
+        r.setProducts(prod);
+        a.add(r);
+        r=new Restaurant("Lo Chalet dei Gourmet","Via Tiburtina",10.0f,"https://gq-images.condecdn.net/image/YokKPaPokWK/crop/1620/f/Romantic-Restaurant-02-GQ-4Apr17_b.jpg");
+        r.setProducts(prod);
+        a.add(r);
 
-        a.add(new Restaurant("McDonald's","via nazionale", 12.4f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png"));
-        a.add(new Restaurant("Burger King","via nazionale", 12.4f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg"));
-        a.add(new Restaurant("KFC","Roma EST", 12.4f,"http://www.freelogovectors.net/wp-content/uploads/2018/03/kfc-logo03.png"));
-        a.add(new Restaurant("Lo Chalet dei Gourmet","Via Tiburtina",10.0f,"https://gq-images.condecdn.net/image/YokKPaPokWK/crop/1620/f/Romantic-Restaurant-02-GQ-4Apr17_b.jpg"));
         return a;
     }
 }
