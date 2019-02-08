@@ -5,8 +5,10 @@ public class Product {
     private int quantity=0;
     private float prize;
 
-    Product(){
-
+    public Product(String name, int quantity, float prize){
+        this.name=name;
+        this.quantity=quantity;
+        this.prize=prize;
     }
 
     public String getName() {
@@ -31,5 +33,13 @@ public class Product {
 
     public void setPrize(float prize) {
         this.prize = prize;
+    }
+
+    public void increaseQuantity(){
+        this.quantity++;
+    }
+    public void decreaseQuantity(){
+        if(this.quantity==0)return;
+        this.quantity--;
     }
 }

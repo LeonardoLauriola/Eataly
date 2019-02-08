@@ -7,8 +7,7 @@ public class Restaurant {
     private String address;
     private float min_order;
     private String img;
-    private ArrayList<String> products;
-    private ArrayList<Product> prodotti; //TO Change name  the change from string to product type
+    private ArrayList<Product> products;
 
 
     public Restaurant(String name, String address, float min_order, String img){
@@ -18,7 +17,7 @@ public class Restaurant {
         this.img=img;
     }
 
-    public String getMin_order() {
+    public float getMin_order() {
         return min_order;
     }
 
@@ -51,11 +50,14 @@ public class Restaurant {
     }
 
 
-    public ArrayList<String> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(ArrayList<String> products) {
+    public void setProducts(ArrayList<Product> products) {
         this.products = products;
+    }
+    public void addProducts(Product p){
+        products.add(p);
     }
 }

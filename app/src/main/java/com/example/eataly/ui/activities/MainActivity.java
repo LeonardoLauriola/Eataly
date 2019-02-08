@@ -12,15 +12,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.example.eataly.R;
+import com.example.eataly.datamodels.Product;
 import com.example.eataly.datamodels.Restaurant;
 import com.example.eataly.ui.adapters.RestaurantAdapter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    RecyclerView restaurantRv;
-    RecyclerView.LayoutManager layoutManager;
-    RestaurantAdapter adapter;
-    ArrayList<String> a;
+    private RecyclerView restaurantRv;
+    private RecyclerView.LayoutManager layoutManager;
+    private RestaurantAdapter adapter;
     public SharedPreferences sharedPreferences;
     private static final String SharedPrefs="com.example.eataly.preferences";
 
@@ -98,16 +98,17 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Restaurant> getData(){
         ArrayList<Restaurant>a =new ArrayList<Restaurant>();
         Restaurant r;
-        ArrayList<String> prod=new ArrayList<>();
-        prod.add("Pasta");
-        prod.add("Pizza");
-        prod.add("Bruschetta");
-        prod.add("Cipolle fritte");
-        prod.add("Fried chicken");
-        r=new Restaurant("McDonald's","via nazionale", 12.4f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png");
+        ArrayList<Product> prod=new ArrayList<>();
+
+        prod.add(new Product("Pasta",10,10.5f));
+        prod.add(new Product("Pizza",10,10.5f));
+        prod.add(new Product("Bruschetta",10,10.5f));
+        prod.add(new Product("Cipolle fritte",10,10.5f));
+        prod.add(new Product("Fried Chicken",10,10.5f));
+        r=new Restaurant("McDonald's","via Nazionale", 12.4f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png");
         r.setProducts(prod);
         a.add(r);
-        r=new Restaurant("Burger King","via nazionale", 12.4f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg");
+        r=new Restaurant("Burger King","via Italia", 12.4f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg");
         r.setProducts(prod);
         a.add(r);
         r=new Restaurant("KFC","Roma EST", 12.4f,"http://www.freelogovectors.net/wp-content/uploads/2018/03/kfc-logo03.png");
