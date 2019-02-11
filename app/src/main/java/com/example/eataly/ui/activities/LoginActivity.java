@@ -29,15 +29,12 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
         registerBtn.setVisibility(View.VISIBLE);
         loginBtn.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
         if(registerBtn.getId()==v.getId()){
             startActivity(new Intent(this,RegisterActivity.class));
-
-
         }
     }
 }

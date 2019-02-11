@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-</LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" android:id="@+id/header">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_label"
+            style="@style/Base.TextAppearance.AppCompat.Body2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="prova"
+            android:id="@+id/restaurant_name"
+            style="@style/TextAppearance.AppCompat.Title" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="address"
+            android:id="@+id/restaurant_address"
+            style="@style/TextAppearance.AppCompat.Subhead" />
+        <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+            android:background="@color/primaryColor"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/product_order_rv"
+            android:layout_below="@id/header" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/total"
+        android:layout_marginTop="4dp"
+        android:id="@+id/total_order_tv"
+        android:layout_above="@+id/pay_btn"
+        style="@style/TextAppearance.AppCompat.Title"/>
+    <Button
+        android:layout_width="match_parent"
+        android:text="@string/pay_label"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:id="@+id/pay_btn"/>
+</RelativeLayout>

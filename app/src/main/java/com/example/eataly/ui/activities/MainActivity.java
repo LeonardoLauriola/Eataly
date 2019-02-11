@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.example.eataly.R;
+import com.example.eataly.datamodels.Order;
 import com.example.eataly.datamodels.Product;
 import com.example.eataly.datamodels.Restaurant;
 import com.example.eataly.ui.adapters.RestaurantAdapter;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId()==R.id.login_menu) {
             startActivity(new Intent(this, LoginActivity.class));
             return true;
-        }else if(item.getItemId()==R.id.checkot_menu){
+        }else if(item.getItemId()==R.id.checkout_menu){
                 startActivity(new Intent(this,CheckoutActivity.class));
         }else if(item.getItemId()==R.id.change_layout){
 
@@ -100,15 +101,15 @@ public class MainActivity extends AppCompatActivity {
         Restaurant r;
         ArrayList<Product> prod=new ArrayList<>();
 
-        prod.add(new Product("Pasta",10,10.5f));
-        prod.add(new Product("Pizza",10,10.5f));
-        prod.add(new Product("Bruschetta",10,10.5f));
-        prod.add(new Product("Cipolle fritte",10,10.5f));
-        prod.add(new Product("Fried Chicken",10,10.5f));
-        r=new Restaurant("McDonald's","via Nazionale", 12.4f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png");
+        prod.add(new Product("Pasta",0,10.5f));
+        prod.add(new Product("Pizza",0,10.5f));
+        prod.add(new Product("Bruschetta",0,10.5f));
+        prod.add(new Product("Cipolle fritte",0,10.5f));
+        prod.add(new Product("Fried Chicken",0,10.5f));
+        r=new Restaurant("McDonald's","via Nazionale", 30f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png");
         r.setProducts(prod);
         a.add(r);
-        r=new Restaurant("Burger King","via Italia", 12.4f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg");
+        r=new Restaurant("Burger King","via Italia", 40f,"https://www.prague.eu/object/1839/4564745-d8e972.jpg");
         r.setProducts(prod);
         a.add(r);
         r=new Restaurant("KFC","Roma EST", 12.4f,"http://www.freelogovectors.net/wp-content/uploads/2018/03/kfc-logo03.png");
@@ -119,5 +120,12 @@ public class MainActivity extends AppCompatActivity {
         a.add(r);
 
         return a;
+    }
+    public static Order GetOrder(){
+        Order o=new Order();
+        o.setRestaurant(getData().get(0));
+        o.setProducts(getData().get(0).getProducts());
+        o.setPriceTotal(30.00f);
+        return o;
     }
 }

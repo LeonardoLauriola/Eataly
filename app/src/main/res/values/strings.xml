@@ -9,4 +9,6 @@
     <string name="checkout">checkout</string>
     <string name="total">Total:</string>
     <string name="min_order">Importo Minimo</string>
+    <string name="order_label">Riepilogo Ordine</string>
+    <string name="pay_label">PAY</string>
 </resources>

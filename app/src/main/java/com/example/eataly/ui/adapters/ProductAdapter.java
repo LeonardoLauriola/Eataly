@@ -36,13 +36,28 @@ public class ProductAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ProductViewHolder productViewHolder= (ProductViewHolder) viewHolder;
         productViewHolder.productName.setText(products.get(i).getName());
-        productViewHolder.prizeTv.setText(String.valueOf(products.get(i).getPrize()).concat("€"));
+        productViewHolder.prizeTv.setText(String.valueOf(products.get(i).getPrice()).concat("€"));
+        productViewHolder.quantityTv.setText(String.valueOf(products.get(i).getQuantity()));
     }
 
     @Override
     public int getItemCount() {
         return products.size();
     }
+
+    public OnQuantityChangeListener getOnQuantityChangeListener() {
+        return onQuantityChangeListener;
+    }
+
+    public void setOnQuantityChangeListener(OnQuantityChangeListener onQuantityChangeListener) {
+        this.onQuantityChangeListener = onQuantityChangeListener;
+    }
+
+    public interface OnQuantityChangeListener{
+        public void onChange(float prize);
+    }
+
+    public OnQuantityChangeListener onQuantityChangeListener;
 
     public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
@@ -63,10 +78,16 @@ public class ProductAdapter extends RecyclerView.Adapter {
         @Override
         public void onClick(View v) {
             if(v.getId()==plusBtn.getId()){
-
+                products.get(getAdapterPosition()).increaseQuantity();
+                notifyItemChanged(getAdapterPosition());
+                float f=products.get(getAdapterPosition()).getPrice();
+                onQuantityChangeListener.onChange(f);
             }else{
                 if(v.getId()==minusBtn.getId()){
-
+                    if(products.get(getAdapterPosition()).getQuantity()==0)return;
+                    products.get(getAdapterPosition()).decreaseQuantity();
+                    notifyItemChanged(getAdapterPosition());
+                    onQuantityChangeListener.onChange(products.get(getAdapterPosition()).getPrice()*(-1));
                 }
             }
         }

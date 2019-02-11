@@ -88,6 +88,7 @@ public class RestaurantAdapter  extends RecyclerView.Adapter {
                 Intent intent = new Intent(context, ShopActivity.class);
                 Restaurant item = data.get(getAdapterPosition());
                 intent.putExtra("img", item.getImg());
+                intent.putExtra("name",item.getName());
                 context.startActivity(intent);
             }
         }
