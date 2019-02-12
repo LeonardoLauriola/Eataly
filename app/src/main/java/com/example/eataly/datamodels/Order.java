@@ -7,10 +7,6 @@ public class Order {
     private float priceTotal;
     private ArrayList<Product> products;
 
-    public Order() {
-
-    }
-
     public Order(Restaurant restaurant, float priceTotal, ArrayList<Product> products){
         this.restaurant=restaurant;
         this.priceTotal=priceTotal;
@@ -34,11 +30,24 @@ public class Order {
         this.products = products;
     }
 
+
     public Restaurant getRestaurant() {
         return restaurant;
     }
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    public void setPriceTotalDynamic(){
+        float price=0;
+        for(int i=0; i<getProducts().size();i++){
+            price+= getProducts().get(i).getSubtotal();
+        }
+
+        setPriceTotal(price);
+    }
+    public void removeItem(Product p){
+        products.remove(p);
     }
 }

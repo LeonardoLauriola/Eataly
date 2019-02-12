@@ -13,17 +13,16 @@ import android.widget.TextView;
 
 import com.example.eataly.R;
 import com.example.eataly.datamodels.Order;
+import com.example.eataly.datamodels.Product;
 import com.example.eataly.ui.adapters.OrderAdapter;
 
-public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener {
+public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener, OrderAdapter.OnPriceChangedListener {
 
-    private TextView restaurantTv,restaurantAddress, totalTv;
+    private TextView restaurantTv,restaurantAddress,totalTv;
     private RecyclerView productRv;
     private LinearLayoutManager layoutManager;
     private Button payBtn;
     private OrderAdapter adapter;
-
-    //TODO CREATE ADAPTER
     private Order order;
 
     @Override
@@ -39,12 +38,14 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         dataBind();
         layoutManager=new LinearLayoutManager(this);
         adapter=new OrderAdapter(this,order.getProducts());
+        adapter.setOnPriceChanged(this);
         productRv.setLayoutManager(layoutManager);
         productRv.setAdapter(adapter);
 
     }
 
    private void dataBind(){
+        setPrice();
         totalTv.setText(String.valueOf("Total: "+order.getPriceTotal()));
         restaurantTv.setText(order.getRestaurant().getName());
         restaurantAddress.setText(order.getRestaurant().getAddress());
@@ -53,5 +54,20 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
 
+    }
+    private void setPrice(){
+        float price=0;
+        for(int i=0; i<order.getProducts().size();i++){
+            price+= order.getProducts().get(i).getSubtotal();
+        }
+        order.setPriceTotal(price);
+        totalTv.setText("Total: "+order.getPriceTotal());
+
+    }
+
+    @Override
+    public void onPriceChanged(Product p) {
+        order.removeItem(p);
+        setPrice();
     }
 }

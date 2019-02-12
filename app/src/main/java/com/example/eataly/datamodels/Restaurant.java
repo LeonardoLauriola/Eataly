@@ -1,5 +1,8 @@
 package com.example.eataly.datamodels;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Restaurant {
@@ -15,6 +18,17 @@ public class Restaurant {
         this.address=address;
         this.min_order=min_order;
         this.img=img;
+    }
+    public Restaurant(JSONObject jsonRestaurant){
+        try {
+            this.name = jsonRestaurant.getString("name");
+            this.address = jsonRestaurant.getString("address");
+            this.min_order = Float.valueOf(jsonRestaurant.getString("min_order"));
+            this.img = jsonRestaurant.getString("image_url");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public float getMin_order() {

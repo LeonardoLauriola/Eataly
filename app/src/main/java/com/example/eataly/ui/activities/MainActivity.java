@@ -8,14 +8,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.JsonReader;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.eataly.R;
 import com.example.eataly.datamodels.Order;
 import com.example.eataly.datamodels.Product;
 import com.example.eataly.datamodels.Restaurant;
 import com.example.eataly.ui.adapters.RestaurantAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,23 +37,59 @@ public class MainActivity extends AppCompatActivity {
     private RestaurantAdapter adapter;
     public SharedPreferences sharedPreferences;
     private static final String SharedPrefs="com.example.eataly.preferences";
-
+    private static final String TAG=MainActivity.class.getSimpleName();
+    public ArrayList<Restaurant> restaurants ;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        restaurantRv=findViewById(R.id.places_rv);
-        layoutManager=getLayoutManager(getSavedLayoutManager());
-        adapter=new RestaurantAdapter(this,getData());
+        restaurantRv = findViewById(R.id.places_rv);
+        layoutManager = getLayoutManager(getSavedLayoutManager());
+        adapter = new RestaurantAdapter(this,getData());
         adapter.setIsGridMode(getSavedLayoutManager());
         restaurantRv.setLayoutManager(layoutManager);
         restaurantRv.setAdapter(adapter);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://5ba19290ee710f0014dd764c.mockapi.io/api/v1/restaurant";
+
+        StringRequest stringRequest=new StringRequest(
+                Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG,response);
+                        //parsing
+                        try {
+                            JSONArray restaurantJsonArray = new JSONArray(response);
+                            for(int i = 0; i < restaurantJsonArray.length(); i++){
+                                Restaurant restaurant = new Restaurant(restaurantJsonArray.getJSONObject(i));
+                                restaurants.add(restaurant);
+                            }
+                            adapter.setData(restaurants);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG,error.getMessage()+" "+error.networkResponse.statusCode);
+                    }
+                }
+        );
+
+        queue.add(stringRequest);
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater=getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main,menu);
 
         if(adapter.getIsGridMode()) {
@@ -97,14 +146,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static ArrayList<Restaurant> getData(){
-        ArrayList<Restaurant>a =new ArrayList<Restaurant>();
+       /* ArrayList<Restaurant>a =new ArrayList<Restaurant>();
         Restaurant r;
         ArrayList<Product> prod=new ArrayList<>();
 
-        prod.add(new Product("Pasta",0,10.5f));
-        prod.add(new Product("Pizza",0,10.5f));
+        prod.add(new Product("Pasta",1,10.5f));
+        prod.add(new Product("Pizza",3,10.5f));
         prod.add(new Product("Bruschetta",0,10.5f));
-        prod.add(new Product("Cipolle fritte",0,10.5f));
+        prod.add(new Product("Cipolle fritte",1,10.5f));
         prod.add(new Product("Fried Chicken",0,10.5f));
         r=new Restaurant("McDonald's","via Nazionale", 30f,"https://www.mcdonalds.com.my/images/sharer/logo-social.png");
         r.setProducts(prod);
@@ -119,13 +168,18 @@ public class MainActivity extends AppCompatActivity {
         r.setProducts(prod);
         a.add(r);
 
-        return a;
+      */ return null;
     }
+
     public static Order GetOrder(){
-        Order o=new Order();
-        o.setRestaurant(getData().get(0));
-        o.setProducts(getData().get(0).getProducts());
-        o.setPriceTotal(30.00f);
+        Order o=new Order(getData().get(0),30.0f,getData().get(0).getProducts());
         return o;
+    }
+
+    public void setRestaurants(ArrayList<Restaurant> restaurants) {
+        this.restaurants = restaurants;
+    }
+    public ArrayList<Restaurant> getRestaurants(){
+        return restaurants;
     }
 }

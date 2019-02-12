@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.eataly.R;
-import com.example.eataly.datamodels.Product;
 import com.example.eataly.datamodels.Restaurant;
 import com.example.eataly.ui.adapters.ProductAdapter;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         adapter=new ProductAdapter(this, p.get(0).getProducts());
         adapter.setOnQuantityChangeListener(this);
         checkOutBtn.setOnClickListener(this);
-
+        checkOutBtn.setEnabled(false);
         productRv.setLayoutManager(layoutManager);
         productRv.setAdapter(adapter);
 
@@ -66,6 +65,7 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
     public void updateTotal(float price){
         setPriceTotal(getPriceTotal()+price);
         total_tv.setText("Total: "+" "+(String.valueOf(getPriceTotal())));
+        enableButton();
     }
 
     @Override
@@ -97,13 +97,9 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         this.priceTotal = priceTotal;
     }
 
-/*
-    public ArrayList<Product> getProduct(){
-        return products;
-    }*/
 
     private void enableButton(){
-  //      checkOutBtn.setEnabled(priceTotal>=);
+        checkOutBtn.setEnabled(priceTotal>=MainActivity.getData().get(0).getMin_order());
     }
     @Override
     public void onClick(View v) {

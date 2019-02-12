@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="4dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,8 +37,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/product_order_rv"
             android:layout_below="@id/header" />
-
-
     </LinearLayout>
 
     <TextView
@@ -54,4 +53,5 @@
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
         android:id="@+id/pay_btn"/>
+
 </RelativeLayout>

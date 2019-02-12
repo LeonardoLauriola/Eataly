@@ -65,6 +65,10 @@ public class RestaurantAdapter  extends RecyclerView.Adapter {
         isGridMode=isGrid;
     }
 
+    public void setData(ArrayList<Restaurant>data){
+        this.data = data;
+        notifyDataSetChanged();
+    }
 
     public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
