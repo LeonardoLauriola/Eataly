@@ -3,6 +3,7 @@ package com.example.eataly.datamodels;
 import java.util.ArrayList;
 
 public class Order {
+
     private Restaurant restaurant;
     private float priceTotal;
     private ArrayList<Product> products;
@@ -29,8 +30,6 @@ public class Order {
     public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
-
-
     public Restaurant getRestaurant() {
         return restaurant;
     }

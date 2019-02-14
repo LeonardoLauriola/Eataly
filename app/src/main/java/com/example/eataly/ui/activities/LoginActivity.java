@@ -10,8 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.example.eataly.R;
+import com.example.eataly.Utility;
 
 public class LoginActivity  extends AppCompatActivity implements View.OnClickListener{
     Button loginBtn,registerBtn;
@@ -35,6 +37,26 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if(registerBtn.getId()==v.getId()){
             startActivity(new Intent(this,RegisterActivity.class));
+        } else{
+            doLogin();
         }
     }
+
+    private void doLogin(){
+        String email =  emailEt.getText().toString();
+        String pswd= passwordEt.getText().toString();
+
+        if(!Utility.verifyEmail(email)){
+            Toast.makeText(this,R.string.wrong_email,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(pswd.length()<6){
+            Toast.makeText(this,R.string.wrong_password, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(this, R.string.correct_login, Toast.LENGTH_SHORT).show();
+    }
 }
+

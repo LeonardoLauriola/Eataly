@@ -13,4 +13,7 @@
     <string name="pay_label">PAY</string>
     <string name="ok">Rimuovi</string>
     <string name="cancel">Annulla</string>
+    <string name="wrong_password">Password Errata</string>
+    <string name="wrong_email">Email Errata</string>
+    <string name="correct_login">Login Corretto</string>
 </resources>

@@ -34,7 +34,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         totalTv=findViewById(R.id.total_order_tv);
         productRv=findViewById(R.id.product_order_rv);
         payBtn=findViewById(R.id.pay_btn);
-        order=MainActivity.GetOrder();
         dataBind();
         layoutManager=new LinearLayoutManager(this);
         adapter=new OrderAdapter(this,order.getProducts());
@@ -54,7 +53,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
 
+
     }
+
     private void setPrice(){
         float price=0;
         for(int i=0; i<order.getProducts().size();i++){

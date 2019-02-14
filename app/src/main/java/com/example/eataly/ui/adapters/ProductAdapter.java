@@ -15,13 +15,13 @@ import java.util.ArrayList;
 
 public class ProductAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
-    private ArrayList<Product> products;
+    private ArrayList<Product> data;
     private Context context;
 
     public ProductAdapter(Context context, ArrayList<Product> products){
         inflater=LayoutInflater.from(context);
         this.context=context;
-        this.products=products;
+        this.data=products;
     }
 
     @NonNull
@@ -35,14 +35,14 @@ public class ProductAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ProductViewHolder productViewHolder= (ProductViewHolder) viewHolder;
-        productViewHolder.productName.setText(products.get(i).getName());
-        productViewHolder.prizeTv.setText(String.valueOf(products.get(i).getPrice()).concat("€"));
-        productViewHolder.quantityTv.setText(String.valueOf(products.get(i).getQuantity()));
+        productViewHolder.productName.setText(data.get(i).getName());
+        productViewHolder.prizeTv.setText(String.valueOf(data.get(i).getPrice()).concat("€"));
+        productViewHolder.quantityTv.setText(String.valueOf(data.get(i).getQuantity()));
     }
 
     @Override
     public int getItemCount() {
-        return products.size();
+        return data.size();
     }
 
     public OnQuantityChangeListener getOnQuantityChangeListener() {
@@ -55,6 +55,10 @@ public class ProductAdapter extends RecyclerView.Adapter {
 
     public interface OnQuantityChangeListener{
         public void onChange(float prize);
+    }
+    public void setData(ArrayList<Product>data){
+        this.data = data;
+        notifyDataSetChanged();
     }
 
     public OnQuantityChangeListener onQuantityChangeListener;
@@ -77,17 +81,18 @@ public class ProductAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
+
             if(v.getId()==plusBtn.getId()){
-                products.get(getAdapterPosition()).increaseQuantity();
+                data.get(getAdapterPosition()).increaseQuantity();
                 notifyItemChanged(getAdapterPosition());
-                float f=products.get(getAdapterPosition()).getPrice();
+                float f=data.get(getAdapterPosition()).getPrice();
                 onQuantityChangeListener.onChange(f);
             }else{
                 if(v.getId()==minusBtn.getId()){
-                    if(products.get(getAdapterPosition()).getQuantity()==0)return;
-                    products.get(getAdapterPosition()).decreaseQuantity();
+                    if(data.get(getAdapterPosition()).getQuantity()==0)return;
+                    data.get(getAdapterPosition()).decreaseQuantity();
                     notifyItemChanged(getAdapterPosition());
-                    onQuantityChangeListener.onChange(products.get(getAdapterPosition()).getPrice()*(-1));
+                    onQuantityChangeListener.onChange(data.get(getAdapterPosition()).getPrice()*(-1));
                 }
             }
         }

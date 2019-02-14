@@ -19,9 +19,9 @@ import com.example.eataly.ui.activities.ShopActivity;
 import java.util.ArrayList;
 
 public class RestaurantAdapter  extends RecyclerView.Adapter {
-    LayoutInflater inflater;
+    private LayoutInflater inflater;
     private ArrayList<Restaurant> data;
-    Context context;
+    private Context context;
     private boolean isGridMode;
 
     public RestaurantAdapter(Context context, ArrayList<Restaurant> data){
@@ -91,8 +91,7 @@ public class RestaurantAdapter  extends RecyclerView.Adapter {
             if(v.getId()==R.id.card_view){
                 Intent intent = new Intent(context, ShopActivity.class);
                 Restaurant item = data.get(getAdapterPosition());
-                intent.putExtra("img", item.getImg());
-                intent.putExtra("name",item.getName());
+                intent.putExtra("id", item.getId());
                 context.startActivity(intent);
             }
         }
