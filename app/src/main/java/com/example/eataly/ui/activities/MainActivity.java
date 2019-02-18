@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public SharedPreferences sharedPreferences;
     private static final String SharedPrefs="com.example.eataly.preferences";
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int LOGIN_REQUEST_CODE = 1;
     private ArrayList<Restaurant> restaurants =new ArrayList<Restaurant>() ;
     private RestController restController;
 
@@ -78,7 +79,9 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId()==R.id.login_menu) {
-            startActivity(new Intent(this, LoginActivity.class));
+
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivityForResult(intent, LOGIN_REQUEST_CODE);
             return true;
         }else if(item.getItemId()==R.id.checkout_menu){
                    startActivity(new Intent(this,CheckoutActivity.class));
@@ -122,8 +125,14 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public void setRestaurants(ArrayList<Restaurant> restaurants) {
         this.restaurants = restaurants;
     }
+
     public ArrayList<Restaurant> getRestaurants(){
         return restaurants;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -136,11 +145,14 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public void onResponse(String response) {
         try {
             JSONArray jsonArray=new JSONArray(response);
+
             for(int i = 0; i < jsonArray.length(); i++){
                 restaurants.add(new Restaurant(jsonArray.getJSONObject(i)));
             }
+
             adapter.setData(restaurants);
             spinner.setVisibility(View.GONE);
+
         } catch (JSONException e) {
             Log.e(TAG,e.getMessage());
         }

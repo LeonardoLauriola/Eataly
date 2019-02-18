@@ -10,7 +10,7 @@
         android:gravity="center"
         android:textSize="30dp"
         android:textColor="#FFFFFF"
-        android:background="@color/primaryColor"
+        android:background="#000000"
         android:text="@string/welcome"/>
 
     <EditText
@@ -49,7 +49,7 @@
             android:text="@string/register"
             android:id="@+id/register_Btn"
             android:layout_margin="8dp"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:background="@color/primaryColor"
             android:gravity="center"/>
     </LinearLayout>

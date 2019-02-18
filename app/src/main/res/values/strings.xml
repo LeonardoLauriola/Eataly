@@ -2,7 +2,7 @@
     <string name="app_name">Eataly</string>
     <string name="email">Insert Email</string>
     <string name="password">Insert Password</string>
-    <string name="number">Insert Number</string>
+    <string name="username">Insert Username</string>
     <string name="register">register</string>
     <string name="login">login</string>
     <string name="welcome">Benvenuto in Eataly</string>
@@ -16,4 +16,5 @@
     <string name="wrong_password">Password Errata</string>
     <string name="wrong_email">Email Errata</string>
     <string name="correct_login">Login Corretto</string>
+    <string name="profile">Profilo</string>
 </resources>

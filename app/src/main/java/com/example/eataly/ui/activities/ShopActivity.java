@@ -1,5 +1,6 @@
 package com.example.eataly.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,13 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
@@ -22,15 +24,13 @@ import com.example.eataly.datamodels.Product;
 import com.example.eataly.datamodels.Restaurant;
 import com.example.eataly.services.RestController;
 import com.example.eataly.ui.adapters.ProductAdapter;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.PortUnreachableException;
 import java.util.ArrayList;
 
 public class ShopActivity extends AppCompatActivity implements ProductAdapter.OnQuantityChangeListener, View.OnClickListener, Response.Listener<String>,Response.ErrorListener {
+
     private RecyclerView productRv;
     private RecyclerView.LayoutManager layoutManager;
     private ProductAdapter adapter;
@@ -44,6 +44,8 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
     private ArrayList<Product> products=new ArrayList<Product>();
     private Restaurant restaurant;
     private final static String TAG = ShopActivity.class.getSimpleName();
+    private final static int LOGIN_REQUEST_CODE = 2;
+    private Menu menu;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +76,11 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         restController=new RestController(this);
         restController.getRequest(Restaurant.ENDPOINT.concat("/").concat(id),this,this);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+      return false;
     }
 
     public void updateProgressBar(int price){
@@ -115,6 +122,32 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
     }
     private void enableButton(){
         checkOutBtn.setEnabled(priceTotal>=restaurant.getMin_order());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.login_menu) {
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivityForResult(intent, LOGIN_REQUEST_CODE);
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            menu.findItem(R.id.login_menu).setTitle(R.string.profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    startActivity(new Intent(ShopActivity.this, ProfileActivity.class));
+                    return true;
+                }
+            });
+        }
+        else{
+            //TODO login not ok
+        }
     }
 
     @Override

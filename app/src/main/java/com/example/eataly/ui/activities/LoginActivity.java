@@ -1,6 +1,8 @@
 package com.example.eataly.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +14,22 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.eataly.R;
 import com.example.eataly.Utility;
+import com.example.eataly.datamodels.User;
+import com.example.eataly.services.RestController;
 
-public class LoginActivity  extends AppCompatActivity implements View.OnClickListener{
-    Button loginBtn,registerBtn;
-    EditText emailEt,passwordEt;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class LoginActivity  extends AppCompatActivity implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener{
+    private Button loginBtn,registerBtn;
+    private EditText emailEt,passwordEt;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,20 +55,35 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
     }
 
     private void doLogin(){
-        String email =  emailEt.getText().toString();
-        String pswd= passwordEt.getText().toString();
+        String email = emailEt.getText().toString();
+        String pswd = passwordEt.getText().toString();
+        Map<String, String> log = new HashMap<>();
+        log.put("identifier", email);
+        log.put("password",pswd);
+        RestController restController = new RestController(this);
+        restController.postRequest(User.LOGIN_ENDPOINT,log,this,this);
+    }
 
-        if(!Utility.verifyEmail(email)){
-            Toast.makeText(this,R.string.wrong_email,Toast.LENGTH_SHORT).show();
-            return;
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+    }
+
+    @Override
+    public void onResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            String token = jsonObject.getString("jwt");
+            Log.d("response",response);
+
+            setResult(Activity.RESULT_OK);
+            finish();
+         /*   SharedPreferences.Editor editor = getSharedPreferences(sharedPreferences, MODE_PRIVATE).edit();
+            editor.putString(TOKEN_PREF, token);
+            editor.apply();*/
+        } catch (JSONException e) {
+            Log.e("response",response);
+            e.printStackTrace();
         }
-
-        if(pswd.length()<6){
-            Toast.makeText(this,R.string.wrong_password, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Toast.makeText(this, R.string.correct_login, Toast.LENGTH_SHORT).show();
     }
 }
-
