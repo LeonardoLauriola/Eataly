@@ -1,13 +1,18 @@
 package com.example.eataly.ui.activities;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.annotation.Nullable;
+
+import com.example.eataly.Utility;
+import com.example.eataly.datamodels.Restaurant;
+import com.example.eataly.services.RestController;
+import com.example.eataly.ui.adapters.RestaurantAdapter;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,36 +20,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.example.eataly.Preferences;
 import com.example.eataly.R;
-import com.example.eataly.datamodels.Order;
-import com.example.eataly.datamodels.Product;
-import com.example.eataly.datamodels.Restaurant;
-import com.example.eataly.services.RestController;
-import com.example.eataly.ui.adapters.RestaurantAdapter;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int LOGIN_REQUEST_CODE = 2001;
     private RecyclerView restaurantRv;
     private ProgressBar spinner;
     private RecyclerView.LayoutManager layoutManager;
     private RestaurantAdapter adapter;
-    public SharedPreferences sharedPreferences;
-    private static final String SharedPrefs="com.example.eataly.preferences";
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int LOGIN_REQUEST_CODE = 1;
     private ArrayList<Restaurant> restaurants =new ArrayList<Restaurant>() ;
     private RestController restController;
+    private Menu menu;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,10 +60,16 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main,menu);
 
-        if(adapter.getIsGridMode()) {
+        String pref = Preferences.getSavedStringByKey(this,"TOKEN");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        this.menu = menu;
+        if(Utility.isLogged(this)) {
+            menu.findItem(R.id.login_menu).setTitle(R.string.profile);
+            menu.findItem(R.id.logout_menu).setVisible(true);
+        }
+        if (adapter.getIsGridMode()) {
             (menu.findItem(R.id.change_layout)).setIcon(R.drawable.ic_list_view);
         }
         return true;
@@ -79,9 +79,12 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId()==R.id.login_menu) {
-
-            Intent intent = new Intent(this,LoginActivity.class);
-            startActivityForResult(intent, LOGIN_REQUEST_CODE);
+            if(Utility.isLogged(this)){
+                startActivity(new Intent(MainActivity.this,ProfileActivity.class));
+            }else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+            }
             return true;
         }else if(item.getItemId()==R.id.checkout_menu){
                    startActivity(new Intent(this,CheckoutActivity.class));
@@ -93,21 +96,23 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                             item.setIcon(R.drawable.ic_grid_view);
                             setLayoutManager();
                         }
-                saveLayoutPreferences(adapter.getIsGridMode());
-        }
+                    saveLayoutPreferences(adapter.getIsGridMode());
+                }else{
+                    if(item.getItemId() == R.id.logout_menu){
+                        Preferences.saveStringPreferences(this,"TOKEN","");
+                        menu.findItem(R.id.logout_menu).setVisible(false);
+                        menu.findItem(R.id.login_menu).setTitle(R.string.login);
+                    }
+                }
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveLayoutPreferences(boolean isGridLayout){
-        sharedPreferences = getSharedPreferences(SharedPrefs,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("VIEW_MODE",isGridLayout);
-        editor.apply();
+    public void saveLayoutPreferences(boolean isGridLayout){
+        Preferences.saveBooleanPreferences(this,"VIEW_MODE",isGridLayout);
     }
 
-    private boolean getSavedLayoutManager(){
-        sharedPreferences = getSharedPreferences(SharedPrefs,MODE_PRIVATE);
-        return sharedPreferences.getBoolean("VIEW_MODE",false);
+    public boolean getSavedLayoutManager(){
+        return Preferences.getSavedBooleanByKey(this,"VIEW_MODE");
     }
 
     private RecyclerView.LayoutManager getLayoutManager(boolean isGridLayout){
@@ -122,17 +127,21 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         saveLayoutPreferences(adapter.getIsGridMode());
     }
 
-    public void setRestaurants(ArrayList<Restaurant> restaurants) {
-        this.restaurants = restaurants;
-    }
-
-    public ArrayList<Restaurant> getRestaurants(){
-        return restaurants;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            menu.findItem(R.id.login_menu).setTitle(R.string.profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                    return true;
+                }
+            });
+            menu.findItem(R.id.logout_menu).setVisible(true);
+        }
+        else{
+            //TODO login not ok
+        }
     }
 
     @Override
@@ -156,6 +165,5 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         } catch (JSONException e) {
             Log.e(TAG,e.getMessage());
         }
-
     }
 }

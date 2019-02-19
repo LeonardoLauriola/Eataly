@@ -11,8 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.eataly.Preferences;
 import com.example.eataly.R;
 import com.example.eataly.Utility;
 import com.example.eataly.datamodels.User;
@@ -143,11 +146,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             JSONObject jsonObject=new JSONObject(response);
             String token = jsonObject.getString("jwt");
             User user= new User(jsonObject,token);
-           /* SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("TOKEN", token);
-            editor.commit();*/
-            Log.d("response",response);
+            Preferences.saveStringPreferences(this,"TOKEN",token);
+            Toast.makeText(this,R.string.register_correct, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();

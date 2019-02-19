@@ -48,7 +48,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderProduct
     }
 
     public interface OnPriceChangedListener{
-        public void onPriceChanged(Product p);
+        void onPriceChanged(Product p);
     }
 
     public OnPriceChangedListener onPriceChanged;

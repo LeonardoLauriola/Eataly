@@ -17,4 +17,8 @@
     <string name="wrong_email">Email Errata</string>
     <string name="correct_login">Login Corretto</string>
     <string name="profile">Profilo</string>
+    <string name="login_error">Email o password errata</string>
+    <string name="login_success">Login Corretto</string>
+    <string name="register_correct">Registrazione corretta</string>
+    <string name="logout">Logout</string>
 </resources>

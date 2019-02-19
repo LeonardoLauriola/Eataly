@@ -1,5 +1,6 @@
 package com.example.eataly;
 
+import android.content.Context;
 import android.util.Patterns;
 
 public class Utility {
@@ -17,5 +18,14 @@ public class Utility {
 
     public static boolean verifyPhone(String phone){
         return Patterns.PHONE.matcher(phone).matches();
+    }
+
+    public static boolean isLogged(Context context){
+        String pref = Preferences.getSavedStringByKey(context, "TOKEN");
+        if(pref.equals(""))
+            return false;
+        else
+            return true;
+
     }
 }

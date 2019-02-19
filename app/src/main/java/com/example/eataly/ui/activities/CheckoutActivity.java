@@ -29,7 +29,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
-        restaurantTv=findViewById(R.id.restaurant_name);
+        /*restaurantTv=findViewById(R.id.restaurant_name);
         restaurantAddress=findViewById(R.id.restaurant_address);
         totalTv=findViewById(R.id.total_order_tv);
         productRv=findViewById(R.id.product_order_rv);
@@ -39,8 +39,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         adapter=new OrderAdapter(this,order.getProducts());
         adapter.setOnPriceChanged(this);
         productRv.setLayoutManager(layoutManager);
-        productRv.setAdapter(adapter);
-
+        productRv.setAdapter(adapter);*/
     }
 
    private void dataBind(){
