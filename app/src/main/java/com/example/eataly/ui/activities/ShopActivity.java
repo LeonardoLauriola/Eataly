@@ -1,9 +1,13 @@
 package com.example.eataly.ui.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +54,22 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
     private Restaurant restaurant;
     private Menu menu;
 
+    BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String response = intent.getStringExtra("response");
+            menu.findItem(R.id.login_menu).setTitle(R.string.profile);
+            menu.findItem(R.id.logout_menu).setVisible(true);
+        }
+    };
+    BroadcastReceiver mMessageReceiver1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            menu.findItem(R.id.login_menu).setTitle(R.string.login);
+            menu.findItem(R.id.logout_menu).setVisible(false);
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -79,7 +99,13 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         restController=new RestController(this);
         restController.getRequest(Restaurant.ENDPOINT.concat("/").concat(id),this,this);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("login"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver1,
+                new IntentFilter("logout"));
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,13 +142,15 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
 
     @Override
     protected void onDestroy() {
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onDestroy();
     }
 
     @Override
     public void onChange(float price) {
         updateTotal(price);
-        updateProgressBar((int)priceTotal*100);
+        updateProgressBar((int)(priceTotal*100));
     }
 
     public float getPriceTotal() {
@@ -142,19 +170,18 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
                 startActivity(new Intent(ShopActivity.this, ProfileActivity.class));
             }else {
                 Intent intent = new Intent(this, LoginActivity.class);
-                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                startActivity(intent);
             }
         }else{
             if(item.getItemId() == R.id.logout_menu){
+                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("logout"));
                 Preferences.saveStringPreferences(this,"TOKEN","");
-                menu.findItem(R.id.logout_menu).setVisible(false);
-                menu.findItem(R.id.login_menu).setTitle(R.string.login);
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             menu.findItem(R.id.login_menu).setTitle(R.string.profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -169,7 +196,7 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         else{
             //TODO login not ok
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -178,7 +205,7 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
                 startActivity(new Intent(this, CheckoutActivity.class));
             }else{
                 Intent intent = new Intent(this,LoginActivity.class);
-                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                startActivity(intent);
             }
         }
     }

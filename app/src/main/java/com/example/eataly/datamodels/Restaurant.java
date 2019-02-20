@@ -6,11 +6,10 @@ import java.util.ArrayList;
 
 public class Restaurant {
 
-    private String name;
+    private String name,img,id;
     private String address;
+    private float rating;
     private float min_order;
-    private String img;
-    private String id;
     private ArrayList<Product> products;
     public final static String ENDPOINT = "restaurants";
 
@@ -29,7 +28,7 @@ public class Restaurant {
             this.min_order = (float)jsonRestaurant.getDouble("min_order");
             this.img = jsonRestaurant.getString("image_url");
             this.id = jsonRestaurant.getString ("id");
-
+            this.rating = (float)(jsonRestaurant.getDouble("rating")/10);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -74,5 +73,13 @@ public class Restaurant {
     }
     public void setId(String id) {
         this.id = id;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }

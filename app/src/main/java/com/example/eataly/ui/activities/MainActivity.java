@@ -1,16 +1,18 @@
 package com.example.eataly.ui.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.annotation.Nullable;
-
 import com.example.eataly.Utility;
 import com.example.eataly.datamodels.Restaurant;
 import com.example.eataly.services.RestController;
 import com.example.eataly.ui.adapters.RestaurantAdapter;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +42,24 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private RestController restController;
     private Menu menu;
 
+
+    BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String response = intent.getStringExtra("response");
+            menu.findItem(R.id.login_menu).setTitle(R.string.profile);
+            menu.findItem(R.id.logout_menu).setVisible(true);
+        }
+    };
+
+    BroadcastReceiver mMessageReceiver1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            menu.findItem(R.id.login_menu).setTitle(R.string.login);
+            menu.findItem(R.id.logout_menu).setVisible(false);
+        }
+    };
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +76,21 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         restController=new RestController(this);
         restController.getRequest(Restaurant.ENDPOINT,this,this);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("login"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver1,
+                new IntentFilter("logout"));
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver1);
+        super.onDestroy();
     }
 
     @Override
@@ -83,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                 startActivity(new Intent(MainActivity.this,ProfileActivity.class));
             }else {
                 Intent intent = new Intent(this, LoginActivity.class);
-                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                startActivity(intent);
             }
             return true;
         }else if(item.getItemId()==R.id.checkout_menu){
@@ -99,11 +134,11 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                     saveLayoutPreferences(adapter.getIsGridMode());
                 }else{
                     if(item.getItemId() == R.id.logout_menu){
+                        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("logout"));
                         Preferences.saveStringPreferences(this,"TOKEN","");
-                        menu.findItem(R.id.logout_menu).setVisible(false);
-                        menu.findItem(R.id.login_menu).setTitle(R.string.login);
                     }
                 }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -127,22 +162,6 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         saveLayoutPreferences(adapter.getIsGridMode());
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            menu.findItem(R.id.login_menu).setTitle(R.string.profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                    return true;
-                }
-            });
-            menu.findItem(R.id.logout_menu).setVisible(true);
-        }
-        else{
-            //TODO login not ok
-        }
-    }
 
     @Override
     public void onErrorResponse(VolleyError error) {
