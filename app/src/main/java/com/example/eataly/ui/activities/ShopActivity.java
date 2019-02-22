@@ -176,6 +176,7 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
             if(item.getItemId() == R.id.logout_menu){
                 LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("logout"));
                 Preferences.saveStringPreferences(this,"TOKEN","");
+                Preferences.saveStringPreferences(this,"USER-ID","");
             }
         }
         return super.onOptionsItemSelected(item);
@@ -202,7 +203,7 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
     public void onClick(View v) {
         if(v.getId()==R.id.checkout_btn){
             if(Utility.isLogged(this)){
-                startActivity(new Intent(this, CheckoutActivity.class));
+                startActivity(new Intent(this, CheckoutActivity.class).putExtra("RESTAURANT-ID",restaurant.getId()));
             }else{
                 Intent intent = new Intent(this,LoginActivity.class);
                 startActivity(intent);

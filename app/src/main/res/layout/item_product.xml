@@ -47,8 +47,8 @@
                 android:id="@+id/second_layout">
                 <Button
                     android:id="@+id/plus_btn"
-                    style="@style/Widget.AppCompat.Button.Small"
-                    android:layout_width="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:text="+"
                     android:textColor="#000000" />
@@ -63,8 +63,8 @@
                     android:layout_margin="4dp"/>
                 <Button
                     android:id="@+id/minus_btn"
-                    style="@style/Widget.AppCompat.Button.Small"
-                    android:layout_width="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:text="-"
                     android:textColor="#000000"/>

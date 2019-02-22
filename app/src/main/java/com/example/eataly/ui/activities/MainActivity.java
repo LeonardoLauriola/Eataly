@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                     if(item.getItemId() == R.id.logout_menu){
                         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("logout"));
                         Preferences.saveStringPreferences(this,"TOKEN","");
+                        Preferences.saveStringPreferences(this,"USER-ID","");
                     }
                 }
 

@@ -82,9 +82,11 @@ public class LoginActivity  extends AppCompatActivity implements View.OnClickLis
         try {
             JSONObject jsonObject = new JSONObject(response);
             String token = jsonObject.getString("jwt");
-            Log.d("token",response);
+
+            User user = new User (jsonObject.getJSONObject("user"),token);
             Toast.makeText(this,R.string.login_success,Toast.LENGTH_SHORT).show();
             Preferences.saveStringPreferences(this,"TOKEN", token);
+            Preferences.saveStringPreferences(this, "USER-ID", user.getId());
             Intent intent = new Intent("login");
             intent.putExtra("response", response);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

@@ -12,7 +12,7 @@ public class User {
     public User(JSONObject object, String accessToken) {
         this.accessToken = accessToken;
         try {
-            this.id = object.getString("id");
+            this.id = object.getString("_id");
             this.username = object.getString("username");
             this.email = object.getString("email");
         } catch (JSONException e) {

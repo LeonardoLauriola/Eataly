@@ -121,9 +121,10 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            style="@android:style/Widget.ProgressBar.Horizontal"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/PrimaryFlatButton"
             android:layout_above="@+id/checkout_btn"
             android:layout_margin="2dp"
             android:progress="25" />

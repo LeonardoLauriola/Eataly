@@ -126,18 +126,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.register_Btn){
-            RestController restController=new RestController(this);
-            Map<String, String> register = new HashMap<>();
-            register.put("username", usernameEt.getText().toString());
-            register.put("email", emailEt.getText().toString());
-            register.put("password", passwordEt.getText().toString());
-            restController.postRequest(User.REGISTER_ENDPOINT, register,this,this);
+            doRegister();
         }else{
             if(v.getId() == login.getId())
                 finish();
         }
     }
-
+    private void doRegister(){
+        RestController restController=new RestController(this);
+        Map<String, String> register = new HashMap<>();
+        register.put("username", usernameEt.getText().toString());
+        register.put("email", emailEt.getText().toString());
+        register.put("password", passwordEt.getText().toString());
+        restController.postRequest(User.REGISTER_ENDPOINT, register,this,this);
+    }
     @Override
     public void onErrorResponse(VolleyError error) {
 
@@ -148,7 +150,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         try {
             JSONObject jsonObject=new JSONObject(response);
             String token = jsonObject.getString("jwt");
-            User user= new User(jsonObject,token);
+            User user = new User(jsonObject,token);
+            Preferences.saveStringPreferences(this, "USER-ID", user.getId());
             Preferences.saveStringPreferences(this,"TOKEN",token);
             Toast.makeText(this,R.string.register_correct, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {

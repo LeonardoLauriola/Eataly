@@ -7,6 +7,7 @@ public class Order {
     private Restaurant restaurant;
     private float priceTotal;
     private ArrayList<Product> products;
+    public final static String ENDPOINT = "orders";
 
     public Order(Restaurant restaurant, float priceTotal, ArrayList<Product> products){
         this.restaurant=restaurant;
