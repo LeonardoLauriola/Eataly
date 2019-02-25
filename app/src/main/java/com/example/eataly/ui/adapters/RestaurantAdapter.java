@@ -51,7 +51,7 @@ public class RestaurantAdapter  extends RecyclerView.Adapter {
         vH.restaurantAddress.setText(data.get(position).getAddress());
         vH.restaurantMinOrder.setText(""+data.get(position).getMin_order());
         vH.ratingBar.setRating(data.get(position).getRating());
-        Glide.with(context).load(data.get(position).getImg()).into(vH.img);
+        Glide.with(context).load(data.get(position).getImageUrl()).into(vH.img);
     }
 
     @Override

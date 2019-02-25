@@ -56,6 +56,11 @@ public class ProductAdapter extends RecyclerView.Adapter {
     public interface OnQuantityChangeListener{
         public void onChange(float prize);
     }
+
+    public ArrayList<Product> getData() {
+        return data;
+    }
+
     public void setData(ArrayList<Product>data){
         this.data = data;
         notifyDataSetChanged();

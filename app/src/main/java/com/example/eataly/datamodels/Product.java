@@ -1,9 +1,14 @@
 package com.example.eataly.datamodels;
 
+import android.arch.persistence.room.Entity;
+
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Product {
+
 
     private String name;
     private int quantity=0;

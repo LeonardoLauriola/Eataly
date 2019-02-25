@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,14 +31,17 @@ import com.bumptech.glide.util.Util;
 import com.example.eataly.Preferences;
 import com.example.eataly.R;
 import com.example.eataly.Utility;
+import com.example.eataly.datamodels.Order;
 import com.example.eataly.datamodels.Product;
 import com.example.eataly.datamodels.Restaurant;
+import com.example.eataly.services.AppDatabase;
 import com.example.eataly.services.RestController;
 import com.example.eataly.ui.adapters.ProductAdapter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.Inflater;
 
 public class ShopActivity extends AppCompatActivity implements ProductAdapter.OnQuantityChangeListener, View.OnClickListener, Response.Listener<String>,Response.ErrorListener {
@@ -182,28 +188,13 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         return super.onOptionsItemSelected(item);
     }
 
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            menu.findItem(R.id.login_menu).setTitle(R.string.profile).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    startActivity(new Intent(ShopActivity.this, ProfileActivity.class));
-                    return true;
-                }
-            });
-            menu.findItem(R.id.logout_menu).setVisible(true);
-        }
-        else{
-            //TODO login not ok
-        }
-    }*/
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.checkout_btn){
             if(Utility.isLogged(this)){
-                startActivity(new Intent(this, CheckoutActivity.class).putExtra("RESTAURANT-ID",restaurant.getId()));
+                new SaveOrderAsyncTask().execute();
             }else{
                 Intent intent = new Intent(this,LoginActivity.class);
                 startActivity(intent);
@@ -234,6 +225,31 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
             spinner.setVisibility(View.GONE);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public class SaveOrderAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Order order = new Order();
+            order.setPriceTotal(priceTotal);
+
+            ArrayList<Product> selected = adapter.getData();
+            selected.removeIf(a -> a.getQuantity()<1);
+            order.setProducts(selected);
+
+            AppDatabase dbInstance = AppDatabase.getAppDatabase(ShopActivity.this);
+            dbInstance.orderDao().insert(order);
+            
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            startActivity(new Intent(ShopActivity.this, CheckoutActivity.class));
         }
     }
 }
