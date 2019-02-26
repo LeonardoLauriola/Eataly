@@ -63,7 +63,6 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
     BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String response = intent.getStringExtra("response");
             menu.findItem(R.id.login_menu).setTitle(R.string.profile);
             menu.findItem(R.id.logout_menu).setVisible(true);
         }
@@ -76,21 +75,30 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         }
     };
 
+    BroadcastReceiver mMessageReceiver2 = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String id = intent.getStringExtra("id");
+            adapter.updateProductById(id);
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
         img=findViewById(R.id.restaurant_img);
-        name_tv=findViewById(R.id.restaurant_name);
-        productRv=findViewById(R.id.product_place_rv);
-        total_tv=findViewById(R.id.total_tv);
-        progressBar=findViewById(R.id.progressBar);
-        checkOutBtn=findViewById(R.id.checkout_btn);
-        min_order_tv=findViewById(R.id.min_order_tv);
+        name_tv = findViewById(R.id.restaurant_name);
+        productRv = findViewById(R.id.product_place_rv);
+        total_tv = findViewById(R.id.total_tv);
+        progressBar = findViewById(R.id.progressBar);
+        checkOutBtn = findViewById(R.id.checkout_btn);
+        min_order_tv = findViewById(R.id.min_order_tv);
         spinner = findViewById(R.id.progressBarMain);
         spinner.setVisibility(View.VISIBLE);
-        layoutManager=new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
 
         adapter = new ProductAdapter(this,products);
         adapter.setOnQuantityChangeListener(this);
@@ -99,8 +107,8 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         productRv.setLayoutManager(layoutManager);
         productRv.setAdapter(adapter);
 
-        Intent i= getIntent();
-        String id=i.getStringExtra("id");
+        Intent i = getIntent();
+        String id = i.getStringExtra("id");
 
         restController=new RestController(this);
         restController.getRequest(Restaurant.ENDPOINT.concat("/").concat(id),this,this);
@@ -109,6 +117,8 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
                 new IntentFilter("login"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver1,
                 new IntentFilter("logout"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver2,
+                new IntentFilter("item_removed"));
 
     }
 
@@ -235,20 +245,20 @@ public class ShopActivity extends AppCompatActivity implements ProductAdapter.On
         protected Void doInBackground(Void... voids) {
             Order order = new Order();
             order.setPriceTotal(priceTotal);
-
+            order.setRestaurant(restaurant);
             ArrayList<Product> selected = adapter.getData();
             selected.removeIf(a -> a.getQuantity()<1);
             order.setProducts(selected);
-
             AppDatabase dbInstance = AppDatabase.getAppDatabase(ShopActivity.this);
+            dbInstance.orderDao().deleteAll();
             dbInstance.orderDao().insert(order);
-            
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            adapter.setData(products);
             startActivity(new Intent(ShopActivity.this, CheckoutActivity.class));
         }
     }

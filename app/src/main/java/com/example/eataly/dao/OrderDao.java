@@ -16,6 +16,9 @@ public interface OrderDao {
     @Query("SELECT * FROM 'order'")
     List<Order> getAll();
 
+    @Query("DELETE FROM 'order'")
+    void deleteAll();
+
     @Insert
     void insert(Order order);
 

@@ -1,6 +1,7 @@
 package com.example.eataly.ui.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.eataly.Preferences;
 import com.example.eataly.R;
 import com.example.eataly.datamodels.Order;
 import com.example.eataly.datamodels.Product;
+import com.example.eataly.services.AppDatabase;
 import com.example.eataly.services.RestController;
 import com.example.eataly.ui.adapters.OrderAdapter;
 
@@ -23,8 +25,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener, OrderAdapter.OnPriceChangedListener, Response.Listener<JSONObject>, Response.ErrorListener {
+
+public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener, OrderAdapter.OnPriceChangedListener {
 
     private TextView restaurantTv,restaurantAddress,totalTv;
     private RecyclerView productRv;
@@ -39,20 +44,19 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_checkout);
         payBtn = findViewById(R.id.pay_btn);
         payBtn.setOnClickListener(this);
-        /*restaurantTv=findViewById(R.id.restaurant_name);
+        restaurantTv=findViewById(R.id.restaurant_name);
         restaurantAddress=findViewById(R.id.restaurant_address);
         totalTv=findViewById(R.id.total_order_tv);
         productRv=findViewById(R.id.product_order_rv);
-        dataBind();
-        layoutManager=new LinearLayoutManager(this);
-        adapter=new OrderAdapter(this,order.getProducts());
-        adapter.setOnPriceChanged(this);
-        productRv.setLayoutManager(layoutManager);
-        productRv.setAdapter(adapter);*/
+        new ReadOrder().execute();
     }
 
    private void dataBind(){
-        setPrice();
+       layoutManager=new LinearLayoutManager(this);
+       adapter=new OrderAdapter(this, (ArrayList<Product>) order.getProducts());
+       adapter.setOnPriceChanged(this);
+       productRv.setLayoutManager(layoutManager);
+       productRv.setAdapter(adapter);
         totalTv.setText(String.valueOf("Total: "+order.getPriceTotal()));
         restaurantTv.setText(order.getRestaurant().getName());
         restaurantAddress.setText(order.getRestaurant().getAddress());
@@ -84,37 +88,31 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             e.printStackTrace();
         }
 
-        RestController restController = new RestController(this);
-        restController.postRequest(this,Order.ENDPOINT, map,this,this);
-
-    }
-    private void setPrice(){
-        float price=0;
-        for(int i=0; i<order.getProducts().size();i++){
-            price+= order.getProducts().get(i).getSubtotal();
-        }
-        order.setPriceTotal(price);
-        totalTv.setText("Total: "+order.getPriceTotal());
-
+       /* RestController restController = new RestController(this);
+        restController.postRequest(this,Order.ENDPOINT, map,this,this);*/
     }
 
     @Override
     public void onPriceChanged(Product p) {
+        order.setPriceTotal(order.getPriceTotal()-(p.getQuantity()*p.getPrice()));
         order.removeItem(p);
-        setPrice();
+        totalTv.setText("Total: "+String.valueOf(order.getPriceTotal()));
     }
 
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        Log.e("risposta", error.getMessage());
-    }
+    public class ReadOrder extends AsyncTask<Void,Void,Void> {
 
-    @Override
-    public void onResponse(JSONObject response) {
-        try {
-            Log.d("risposta", response.getString("id"));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        @Override
+        protected Void doInBackground(Void... voids) {
+            AppDatabase dbInstance = AppDatabase.getAppDatabase(CheckoutActivity.this);
+            List<Order> orders = dbInstance.orderDao().getAll();
+            order = orders.get(0);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            dataBind();
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.example.eataly.ui.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,14 @@ public class ProductAdapter extends RecyclerView.Adapter {
         inflater=LayoutInflater.from(context);
         this.context=context;
         this.data=products;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void updateProductById(String id){
+        Product p1 = data.stream().filter(product -> product.getId().equals(id)).findFirst().get();
+        onQuantityChangeListener.onChange((p1.getPrice()*p1.getQuantity())*-1);
+        p1.setQuantity(0);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -54,7 +64,7 @@ public class ProductAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnQuantityChangeListener{
-        public void onChange(float prize);
+        void onChange(float prize);
     }
 
     public ArrayList<Product> getData() {

@@ -3,8 +3,10 @@ package com.example.eataly.ui.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +88,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderProduct
                         .setMessage("Sei sicuro di voler rimuovere questo prodotto dall'ordine? ")
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent("item_removed");
+                                intent.putExtra("id",dataSet.get(getAdapterPosition()).getId());
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                                 onPriceChanged.onPriceChanged(dataSet.get(getAdapterPosition()));
                                 notifyItemRemoved(getAdapterPosition());
                             }
